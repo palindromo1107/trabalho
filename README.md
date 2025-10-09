@@ -1,88 +1,144 @@
-Aqui está uma apresentação sobre os tipos de gráficos da estatística descritiva, com exemplos em dados agrupados e não agrupados, utilizando a linguagem R e planilhas eletrônicas, seguindo as regras da ABNT:
+1. Entidades Sugeridas:
+1.1 Produto
 
-*Slide 1: Introdução*
+Atributos: id_produto (PK), nome_produto, descrição, preço, categoria, estoque
 
-- Título: "Gráficos Estatísticos: Uma Ferramenta Importante para Análise de Dados"
-- Resumo: "Os gráficos estatísticos são uma forma eficaz de visualizar e entender dados. Nesta apresentação, vamos explorar os diferentes tipos de gráficos e suas aplicações em exemplos práticos."
+Um produto específico, como halteres, tênis de corrida, suplementos, etc.
 
-*Slide 2: Gráfico de Barras*
+1.2 Categoria
 
-- Título: "Gráfico de Barras"
-- Descrição: "O gráfico de barras é utilizado para comparar categorias ou grupos."
-- Exemplo: "Vendas de produtos por região"
-- Código em R:
-library(ggplot2)
-vendas <- data.frame(Regiao = c("Norte", "Sul", "Leste", "Oeste"),
-                     Vendas = c(100, 200, 300, 400))
-ggplot(vendas, aes(x = Regiao, y = Vendas)) + 
-  geom_bar(stat = "identity")
+Atributos: id_categoria (PK), nome_categoria, descrição
 
-- Imagem do gráfico
+A categoria pode ser algo como "Suplementos", "Roupas", "Equipamentos", etc. Cada produto será vinculado a uma categoria.
 
-*Slide 3: Gráfico de Pizza*
+1.3 Cliente
 
-- Título: "Gráfico de Pizza"
-- Descrição: "O gráfico de pizza é utilizado para mostrar a proporção de categorias."
-- Exemplo: "Distribuição de gênero em uma empresa"
-- Código em R:
-library(ggplot2)
-genero <- data.frame(Genero = c("Masculino", "Feminino"),
-                     Frequencia = c(60, 40))
-ggplot(genero, aes(x = "", y = Frequencia, fill = Genero)) + 
-  geom_bar(stat = "identity") + 
-  coord_polar("y")
+Atributos: id_cliente (PK), nome_cliente, email, telefone, endereço
 
-- Imagem do gráfico
+Os clientes que compram produtos na loja. Podem ser cadastrados para facilitar a compra e o envio.
 
-*Slide 4: Histograma*
+1.4 Venda
 
-- Título: "Histograma"
-- Descrição: "O histograma é utilizado para mostrar a distribuição de uma variável contínua."
-- Exemplo: "Idade dos funcionários de uma empresa"
-- Código em R:
-library(ggplot2)
-idade <- data.frame(Idade = rnorm(100, mean = 30, sd = 5))
-ggplot(idade, aes(x = Idade)) + 
-  geom_histogram(bins = 10, color = "black", fill = "lightblue")
+Atributos: id_venda (PK), id_cliente (FK), data_venda, total
 
-- Imagem do gráfico
+Relacionada à transação de compra realizada por um cliente. Cada venda pode conter vários produtos, e o total pode ser calculado com base nos itens comprados.
 
-*Slide 5: Gráfico de Dispersão*
+1.5 ItemVenda
 
-- Título: "Gráfico de Dispersão"
-- Descrição: "O gráfico de dispersão é utilizado para mostrar a relação entre duas variáveis contínuas."
-- Exemplo: "Relação entre horas trabalhadas e salário"
-- Código em R:
-library(ggplot2)
-trabalho <- data.frame(Horas = rnorm(100, mean = 40, sd = 5),
-                       Salario = rnorm(100, mean = 5000, sd = 1000))
-ggplot(trabalho, aes(x = Horas, y = Salario)) + 
-  geom_point()
+Atributos: id_item_venda (PK), id_venda (FK), id_produto (FK), quantidade, preço_unitario
 
-- Imagem do gráfico
+Esse é o detalhe da venda. Uma venda pode ter vários produtos, e cada item de venda tem a quantidade comprada e o preço unitário.
 
-*Slide 6: Gráfico de Caixa*
+1.6 Pagamento
 
-- Título: "Gráfico de Caixa"
-- Descrição: "O gráfico de caixa é utilizado para mostrar a distribuição de uma variável contínua e detectar outliers."
-- Exemplo: "Salários de funcionários por departamento"
-- Código em R:
-library(ggplot2)
-salario <- data.frame(Departamento = c(rep("Vendas", 100), rep("Marketing", 100)),
-                      Salario = c(rnorm(100, mean = 4000, sd = 500), rnorm(100, mean = 5000, sd = 500)))
-ggplot(salario, aes(x = Departamento, y = Salario)) + 
-  geom_boxplot()
+Atributos: id_pagamento (PK), id_venda (FK), tipo_pagamento, valor_pago, data_pagamento
 
-- Imagem do gráfico
+Para registrar as formas de pagamento (cartão, boleto, dinheiro, etc.) e os valores pagos.
 
-*Slide 7: Conclusão*
+2. Relacionamentos:
 
-- Título: "Conclusão"
-- Resumo: "Os gráficos estatísticos são uma ferramenta importante para análise de dados. Cada tipo de gráfico tem sua própria aplicação e pode ser utilizado para mostrar diferentes aspectos dos dados."
+Produto ↔ Categoria
+Um produto pertence a uma categoria (um para muitos).
+Relacionamento: Um produto tem uma categoria, mas uma categoria pode ter muitos produtos.
 
-*Referências*
+Cliente ↔ Venda
+Um cliente pode realizar várias vendas (um para muitos).
+Relacionamento: Um cliente pode ter várias vendas registradas, mas cada venda pertence a um único cliente.
 
-- ABNT NBR 14724:2011 - Informação e documentação - Trabalhos acadêmicos - Apresentação.
-- R Core Team (2022). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
+Venda ↔ ItemVenda
+Uma venda pode ter muitos itens de venda (um para muitos).
+Relacionamento: Cada venda pode conter múltiplos produtos, e cada item de venda está relacionado a um produto específico.
 
-Espero que isso ajude! Lembre-se de personalizar os exemplos e seguir as regras da ABNT.
+Produto ↔ ItemVenda
+Um produto pode aparecer em várias vendas, e um item de venda está relacionado a um único produto (muitos para um).
+Relacionamento: O item de venda é um vínculo entre o produto e a venda.
+
+Venda ↔ Pagamento
+Cada venda pode ter um ou mais pagamentos (um para muitos).
+Relacionamento: Uma venda pode ser paga por meio de diferentes métodos de pagamento (parcelado, à vista, etc.).
+
+3. Modelo Conceitual (Diagrama ER):
+
+Aqui está o esboço do modelo conceitual, com as entidades e seus relacionamentos:
+
+Cliente ------< Venda >------< ItemVenda >------ Produto >------ Categoria
+   |
+Pagamento
+
+4. Modelo Lógico (Relacional):
+
+Com base nas entidades e relacionamentos acima, aqui está uma visão geral das tabelas e como elas se relacionam:
+
+Produto
+
+id_produto (PK)
+
+nome_produto
+
+descrição
+
+preço
+
+categoria_id (FK) → Referencia Categoria(id_categoria)
+
+estoque
+
+Categoria
+
+id_categoria (PK)
+
+nome_categoria
+
+descrição
+
+Cliente
+
+id_cliente (PK)
+
+nome_cliente
+
+email
+
+telefone
+
+endereço
+
+Venda
+
+id_venda (PK)
+
+cliente_id (FK) → Referencia Cliente(id_cliente)
+
+data_venda
+
+total
+
+ItemVenda
+
+id_item_venda (PK)
+
+venda_id (FK) → Referencia Venda(id_venda)
+
+produto_id (FK) → Referencia Produto(id_produto)
+
+quantidade
+
+preço_unitario
+
+Pagamento
+
+id_pagamento (PK)
+
+venda_id (FK) → Referencia Venda(id_venda)
+
+tipo_pagamento
+
+valor_pago
+
+data_pagamento
+
+5. Considerações Finais:
+
+Esse banco de dados pode ser expandido para incluir mais funcionalidades no futuro, como um sistema de fidelidade para clientes ou um controle mais detalhado do estoque, mas com essas 6 entidades e seus relacionamentos você já tem uma estrutura sólida para começar.
+
+Se precisar de mais detalhes ou ajuda para construir o diagrama ER visualmente ou o modelo relacional completo, é só falar!
