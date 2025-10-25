@@ -10,11 +10,11 @@ void* t1(void* arg) {
     
     sleep(1);
     
-    printf("thread1 iniciada!\n");
+    printf("\nthread1 iniciada!\n");
     
     sleep(1);
     
-    printf("thread1 finalizada!\n");
+    printf("\nthread1 finalizada!\n");
     
     pthread_exit(NULL);
 }
@@ -24,7 +24,7 @@ void* t2(void* arg) {
     
     sleep(1);
     
-    printf("thread2 iniciada!\n");
+    printf("\nthread2 iniciada!\n");
     printf("aguardando thread1...\n");
     
     pthread_t thread1;
@@ -52,8 +52,8 @@ void* t3(void* arg) {
     
     sleep(1);
     
-    printf("thread3 iniciada!\n");
-    printf("\naguardando thread2...\n");
+    printf("\nthread3 iniciada!\n");
+    printf("aguardando thread2...\n");
     
     pthread_t thread2;
     
@@ -146,3 +146,7 @@ int main() {
     printf("\ntodas as threads foram finalizadas!");
     return 0;
 }
+/* EXPLICAÇÃO DO CODIGO
+este codigo cria 5 threads de forma encadeada fazendo com que cada uma crie e execute a outra
+começando da thread5 ate a thread1. Apos a thread ser criada e dar inicio a outra ela aguarda 
+todo o procedimento de execução para so entao finalizar sua execução*/
