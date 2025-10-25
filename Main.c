@@ -25,6 +25,7 @@ void* t2(void* arg) {
     sleep(1);
     
     printf("thread2 iniciada!\n");
+    printf("aguardando thread1...\n");
     
     pthread_t thread1;
     
@@ -41,7 +42,7 @@ void* t2(void* arg) {
     
     sleep(1);
     
-    printf("thread2 finalizada!\n");
+    printf("\nthread2 finalizada!\n");
     
     pthread_exit(NULL);
 }
@@ -52,6 +53,7 @@ void* t3(void* arg) {
     sleep(1);
     
     printf("thread3 iniciada!\n");
+    printf("\naguardando thread2...\n");
     
     pthread_t thread2;
     
@@ -66,7 +68,7 @@ void* t3(void* arg) {
     
     sleep(1);
     
-    printf("thread3 finalizada!\n");
+    printf("\nthread3 finalizada!\n");
     
     pthread_exit(NULL);
 }
@@ -76,7 +78,8 @@ void* t4(void* arg) {
     
     sleep(1);
     
-    printf("thread4 iniciada!\n");
+    printf("\nthread4 iniciada!\n");
+    printf("aguardando thread3...\n");
     
     pthread_t thread3;
 
@@ -91,7 +94,7 @@ void* t4(void* arg) {
     
     sleep(1);
     
-    printf("thread4 finalizada!\n");
+    printf("\nthread4 finalizada!\n");
     
     pthread_exit(NULL);
 }
@@ -101,7 +104,8 @@ void* t5(void* arg) {
     
     sleep(1);
     
-    printf("thread5 iniciada!\n");
+    printf("\nthread5 iniciada!\n");
+    printf("aguardando thread4...\n");
     
     pthread_t thread4;
     
@@ -116,13 +120,16 @@ void* t5(void* arg) {
     
     sleep(1);
     
-    printf("thread5 finalizada!\n");
+    printf("\nthread5 finalizada!\n");
     
     pthread_exit(NULL);
 }
 
 //MAIN
 int main() {
+    
+    printf("processo iniciado aguardando o fim das threads!\n");
+    
     pthread_t thread5;
     
     int res5 = pthread_create(&thread5, NULL, t5, NULL);
@@ -136,6 +143,6 @@ int main() {
     
     sleep(1);
 
-    printf("todas as threads foram finalizadas!\n");
+    printf("\ntodas as threads foram finalizadas!");
     return 0;
 }
