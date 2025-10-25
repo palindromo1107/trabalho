@@ -1,3 +1,5 @@
+* FAVOR IGUINORAR O README
+
 1. Entidades Sugeridas:
 1.1 Produto
 
