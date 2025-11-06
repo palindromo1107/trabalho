@@ -3,150 +3,46 @@
 #include <pthread.h>
 #include <unistd.h>
 
-//THREADS ENCADEADAS
+int variavel1 = 1;
+int variavel2 = 0;
+pthread_mutex_t mutex;
 
-//THREAD 1
-void* t1(void* arg) {
-    
-    sleep(1);
-    
-    printf("\nthread1 iniciada!\n");
-    
-    sleep(1);
-    
-    printf("\nthread1 finalizada!\n");
-    
+void* dobro(void* arg) {
+    for (long i = 0; i < 10; i++) {
+        pthread_mutex_lock(&mutex);
+        variavel1 = variavel1 * 2;
+        printf("Valor dobrado: %d\n", variavel1);
+        printf("Novo valor atual: %d\n", variavel1);
+        pthread_mutex_unlock(&mutex);
+        sleep(1);
+    }
     pthread_exit(NULL);
 }
 
-//THREAD 2
-void* t2(void* arg) {
-    
-    sleep(1);
-    
-    printf("\nthread2 iniciada!\n");
-    printf("aguardando thread1...\n");
-    
-    pthread_t thread1;
-    
-    int res1 = pthread_create(&thread1, NULL, t1, NULL);
-
-    if (res1 != 0) {
-        perror("Erro ao criar a thread");
-        exit(1);
+void* anterior(void* arg) {
+    for (int i = 0; i < 10; i++) {
+        pthread_mutex_lock(&mutex);
+        variavel2 = variavel1;
+        printf("\nValor atual: %d\n", variavel2);
+        pthread_mutex_unlock(&mutex);
+        sleep(1.5);
     }
-    
-    sleep(1);
-
-    pthread_join(thread1, NULL);
-    
-    sleep(1);
-    
-    printf("\nthread2 finalizada!\n");
-    
     pthread_exit(NULL);
 }
 
-//THREAD 3
-void* t3(void* arg) {
-    
-    sleep(1);
-    
-    printf("\nthread3 iniciada!\n");
-    printf("aguardando thread2...\n");
-    
-    pthread_t thread2;
-    
-    int res2 = pthread_create(&thread2, NULL, t2, NULL);
+int main()
+{
+    pthread_t t1, t2;
 
-    if (res2 != 0) {
-        perror("Erro ao criar a thread");
-        exit(1);
-    }
+    pthread_mutex_init(&mutex, NULL);
 
-    pthread_join(thread2, NULL);
-    
-    sleep(1);
-    
-    printf("\nthread3 finalizada!\n");
-    
-    pthread_exit(NULL);
-}
+    pthread_create(&t2, NULL, anterior, NULL);
+    pthread_create(&t1, NULL, dobro, NULL);
 
-//THREAD 4
-void* t4(void* arg) {
-    
-    sleep(1);
-    
-    printf("\nthread4 iniciada!\n");
-    printf("aguardando thread3...\n");
-    
-    pthread_t thread3;
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
 
-     int res3 = pthread_create(&thread3, NULL, t3, NULL);
-    
-    if (res3 != 0) {
-        perror("Erro ao criar a thread");
-        exit(1);
-    }
+    pthread_mutex_destroy(&mutex);
 
-    pthread_join(thread3, NULL);
-    
-    sleep(1);
-    
-    printf("\nthread4 finalizada!\n");
-    
-    pthread_exit(NULL);
-}
-
-//THREAD 5
-void* t5(void* arg) {
-    
-    sleep(1);
-    
-    printf("\nthread5 iniciada!\n");
-    printf("aguardando thread4...\n");
-    
-    pthread_t thread4;
-    
-    int res4 = pthread_create(&thread4, NULL, t4, NULL);
-
-    if (res4 != 0) {
-        perror("Erro ao criar a thread");
-        exit(1);
-    }
-
-    pthread_join(thread4, NULL);
-    
-    sleep(1);
-    
-    printf("\nthread5 finalizada!\n");
-    
-    pthread_exit(NULL);
-}
-
-//MAIN
-int main() {
-    
-    printf("processo iniciado aguardando o fim das threads!\n");
-    
-    pthread_t thread5;
-    
-    int res5 = pthread_create(&thread5, NULL, t5, NULL);
-
-    if (res5 != 0) {
-        perror("Erro ao criar a thread");
-        return 1;
-    }
-
-    pthread_join(thread5, NULL);
-    
-    sleep(1);
-
-    printf("\ntodas as threads foram finalizadas!");
     return 0;
 }
-/* EXPLICAÇÃO DO CODIGO
-este codigo cria 5 threads de forma encadeada fazendo com que cada uma crie e execute a outra
-começando da thread5 ate a thread1. Apos a thread ser criada e dar inicio a outra ela aguarda 
-todo o procedimento de execução para so entao finalizar sua execução*/
